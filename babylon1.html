@@ -63,18 +63,13 @@
                 var cam = newScene.activeCamera;
 				//auto steuerung binden
                 //cam.attachControl(canvas);
-				cam.maxZ = 70;//sichtweite
+				cam.maxZ = 120;//sichtweite
 				cam.checkCollisions = true;
 
 				cam.onCollide = function(){
 					console.log(this)
 				};
 
-				//cam positionieren
-				cam.position.x = 30;
-				cam.position.z = 30;
-				cam.rotation.y = -1.8;
-				cam.rotation.x = 0.24;
 
                 // Once the scene is loaded, just register a render loop to render it
                 engine.runRenderLoop(function() {
@@ -94,7 +89,7 @@
        //push selected mesh
        var pickedMesh = pickResult.pickedMesh;
 
-       if(pickedMesh.name != 'Plane.001'){
+       if(pickedMesh.name != 'raum'){
            var newMesh = pickedMesh.clone('testMesh');
 
            newMesh.position.x += 10
