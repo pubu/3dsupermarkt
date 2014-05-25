@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Using babylon.js - How to load a scene</title>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="babylon.1.11.js"></script>
     <style>
         html, body {
@@ -22,9 +23,14 @@
     <canvas id="renderCanvas"></canvas>
     <script>
     if (BABYLON.Engine.isSupported()) {
+
+	    function set_position(cam, pos_arr){
+	    	cam.setPosition(new BABYLON.Vector3(pos_arr[0], pos_arr[1], pos_arr[2]));
+	    }
+
         var canvas = document.getElementById("renderCanvas");
         var engine = new BABYLON.Engine(canvas, true);
-        
+
         BABYLON.SceneLoader.Load("", "regal003.babylon", engine, function (newScene) {
         /*
         var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 10, BABYLON.Vector3.Zero(), newScene);
@@ -32,14 +38,28 @@
         light0.diffuse = new BABYLON.Color3(1, 0, 0);
 		light0.specular = new BABYLON.Color3(1, 1, 1);
         camera.setPosition(new BABYLON.Vector3(0, 0, 0)); */
-        console.log(newScene);
         window.c = newScene.activeCamera;
-        
-        
+        window.s = newScene;
+
+
             // Wait for textures and shaders to be ready
             newScene.executeWhenReady(function () {
                 // Attach camera to canvas inputs
-                newScene.activeCamera.attachControl(canvas);
+                var cam = newScene.activeCamera;
+				//auto steuerung binden
+                cam.attachControl(canvas);
+				cam.maxZ = 300;
+				cam.checkCollisions = true;
+
+				cam.onCollide = function(obj){
+					console.log(obj)
+				};
+				//cam positionieren
+				cam.position.x = 30;
+				cam.position.z = 30;
+
+				cam.rotation.y = -1.8;
+				cam.rotation.x = 0.24;
 
                 // Once the scene is loaded, just register a render loop to render it
                 engine.runRenderLoop(function() {
@@ -50,6 +70,24 @@
             // To do: give progress feedback to user
         });
     }
+
+ 	//When click event is raised
+    window.addEventListener("click", function (evt) {
+       // We try to pick an object
+       var pickResult = s.pick(evt.clientX, evt.clientY);
+
+       //push selected mesh
+       var pickedMesh = pickResult.pickedMesh;
+
+       console.log(pickedMesh.name);
+       if(pickedMesh.name != 'Plane.001'){
+           var newMesh = pickedMesh.clone('testMesh');
+
+           newMesh.position.x += 10
+           console.log(newMesh);
+           s.meshes.push(newMesh);
+       }
+    });
 </script>
  </body>
 </html>
