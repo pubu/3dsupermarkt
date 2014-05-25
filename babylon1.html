@@ -62,17 +62,17 @@
                 // Attach camera to canvas inputs
                 var cam = newScene.activeCamera;
 				//auto steuerung binden
-                cam.attachControl(canvas);
-				cam.maxZ = 300;
+                //cam.attachControl(canvas);
+				cam.maxZ = 70;//sichtweite
 				cam.checkCollisions = true;
 
-				cam.onCollide = function(obj){
-					console.log(obj)
+				cam.onCollide = function(){
+					console.log(this)
 				};
+
 				//cam positionieren
 				cam.position.x = 30;
 				cam.position.z = 30;
-
 				cam.rotation.y = -1.8;
 				cam.rotation.x = 0.24;
 
@@ -120,9 +120,6 @@
 			if(dir == 'rechts'){
 				c.rotation.y += 0.2;
 			}
-
-			console.log(dir);
-
  	});
 </script>
  </body>
