@@ -62,12 +62,12 @@
                 // Attach camera to canvas inputs
                 var cam = newScene.activeCamera;
 				//auto steuerung binden
-                //cam.attachControl(canvas);
+                cam.attachControl(canvas);
 				cam.maxZ = 120;//sichtweite
 				cam.checkCollisions = true;
 
 				cam.onCollide = function(){
-					console.log(this)
+					var cam = this;
 				};
 
 
@@ -98,9 +98,31 @@
        }
     });
 
+ 	var LAST_RAUM;
+ 	function tunnel_erzeugen(){
+ 		//wird die funktion ausgeführt so wird ein weiterer raum an den letzen gehängt
+ 		var oraum =  s.meshes[0]; //orignal
+ 		var raum = s.meshes[0].clone(); //clone
+ 		//bounce Info vom raum laden
+ 		r_bounce = oraum.getBoundingInfo();
+		bb = r_bounce.boundingBox;
+		//position anhand der bounding box laden
+		//x position anpassen, an den anderen raum setzen
+		roff = 0;
+		if(LAST_RAUM){
+			roff = LAST_RAUM.position.x;
+		}
+		raum.position.x = roff + (bb.maximumWorld.x*2);
+		LAST_RAUM = raum;
+		s.meshes.push(raum);
+ 	}
+
  	$('#control a').click(function(e){
  		e.stopPropagation();
 		var $obj = $(this);
+
+
+
 			dir = $obj.attr('id');
 
 			if(dir == 'vor'){
